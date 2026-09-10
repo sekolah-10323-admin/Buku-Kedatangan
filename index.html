@@ -92,6 +92,20 @@ react-dom/cjs/react-dom-client.production.js:
 
   const STORAGE_KEY = "kedatangan_fb_config";
 
+  // Baked in so any device opening this file auto-connects, without each browser
+  // needing the config pasted in separately. A locally saved config (from the
+  // setup screen) still takes precedence, in case this ever needs to point at a
+  // different Firebase project.
+  const DEFAULT_FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCx-I5JYErO_ZbpMgkKY0Z-KX7yjd82bsc",
+    authDomain: "school-attendance-97b73.firebaseapp.com",
+    projectId: "school-attendance-97b73",
+    storageBucket: "school-attendance-97b73.firebasestorage.app",
+    messagingSenderId: "63615041911",
+    appId: "1:63615041911:web:079b888bf2236e66a9a172",
+    measurementId: "G-1XMS2B54Y0",
+  };
+
   function extractConfigBlock(text) {
     const trimmed = text.trim();
     // Most people paste the whole snippet Firebase shows (imports, comments, the
@@ -139,12 +153,8 @@ react-dom/cjs/react-dom-client.production.js:
 
   (async () => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) {
-      showSetup();
-      return;
-    }
+    const config = saved ? JSON.parse(saved) : DEFAULT_FIREBASE_CONFIG;
     try {
-      const config = JSON.parse(saved);
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js");
       const {
         getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc, query, where, writeBatch,
